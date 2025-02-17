@@ -9,15 +9,19 @@ import random
 # r = pode ser definido como complexidade do problema na tarefa
 
 def simularTarefas(quantidadeMaquinas, r):
-    quantidadeTarefas = int(quantidadeMaquinas * r)
+    quantidadeTarefas = int(quantidadeMaquinas ** r)
     tarefa = [random.randint(1, 100) for _ in range(quantidadeTarefas)]
     return quantidadeMaquinas, quantidadeTarefas, tarefa
 
 def avaliarCarga(alocar, quantidadeMaquinas):
-    return max(sum(alocar[i]) for i in range(quantidadeMaquinas)) # makespan maximo
+    return max(sum(alocar[i]) for i in range(quantidadeMaquinas))
 
-def melhorMelhora(quantidadeMaquinas, tarefa, alocarInicial):
-    alocar = alocarInicial[:]
+def melhorMelhora(quantidadeMaquinas, tarefa):
+    alocar = [[] for _ in range(quantidadeMaquinas)]
+    for tarefas in tarefa:
+        maquinaMenorCarga = min(range(quantidadeMaquinas), key=lambda i: sum(alocar[i]))
+        alocar[maquinaMenorCarga].append(tarefas)
+    
     melhorMakespan = avaliarCarga(alocar, quantidadeMaquinas)
     teveMelhora = True
     iteracoes = 0
@@ -54,25 +58,6 @@ def melhorMelhora(quantidadeMaquinas, tarefa, alocarInicial):
 
     return melhorMakespan, iteracoes
 
-def melhorMelhoraRepetir(quantidadeMaquinas, tarefa, reinicializacoes):
-    melhorMakespanGlobal = float('inf')
-    melhorAlocacaoGlobal = None
-
-    for _ in range(reinicializacoes):
-        # Gera uma nova solução inicial aleatória
-        alocarInicial = [[] for _ in range(quantidadeMaquinas)]
-        for t in tarefa:
-            maquina = random.randint(0, quantidadeMaquinas - 1)
-            alocarInicial[maquina].append(t)
-
-        melhor_makespan_local, iteracoes_local = melhorMelhora(quantidadeMaquinas, tarefa, alocarInicial)
-
-        if melhor_makespan_local < melhorMakespanGlobal:
-            melhorMakespanGlobal = melhor_makespan_local
-            melhorAlocacaoGlobal = alocarInicial
-            iteracoesGlobal = iteracoes_local
-
-    return melhorMakespanGlobal, iteracoesGlobal
 
 def iniciarTestes():
     valorQuantidadeMaquinas = [10, 20, 50]
@@ -85,7 +70,7 @@ def iniciarTestes():
             for rep in range(1, repeticoes + 1):
                 _, quantidadeTarefas, tarefa = simularTarefas(quantidadeMaquinas, valorR)
                 tempo = time.time()
-                melhorMakespan, iteracoes = melhorMelhoraRepetir(quantidadeMaquinas, tarefa, 10)  # Chama a nova função com 10 reinicializações
+                melhorMakespan, iteracoes = melhorMelhora(quantidadeMaquinas, tarefa)
                 tempoFinal = time.time() - tempo
                 resultado.append(f"monotona,{quantidadeTarefas},{quantidadeMaquinas},{rep},{tempoFinal:.2f},{iteracoes},{melhorMakespan},NA")
     
@@ -95,4 +80,4 @@ def iniciarTestes():
 
 if __name__ == "__main__":
     iniciarTestes()
-    print("Resultados salvos em 'resultados_blm.csv'")
+    print("Simulação concluída. Resultados salvos em 'resultados_blm.txt'")
