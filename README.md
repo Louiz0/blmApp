@@ -1,0 +1,2 @@
+Aplicação desenvolvida na linguagem Python, na qual, realiza balanceamento de cargas entre máquinas, gerando tarefas aleatórias e calculando o makespan máximo das máquinas.
+Foi utilizado a heurística de Busca Local Monótona - Melhor Melhora que consiste em sempre buscar e testar a melhor solução em todos os casos.
