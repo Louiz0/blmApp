@@ -72,7 +72,7 @@ def iniciarTestes():
                 tempo = time.time()
                 melhorMakespan, iteracoes = melhorMelhora(quantidadeMaquinas, tarefa)
                 tempoFinal = time.time() - tempo
-                resultado.append(f"monotona,{quantidadeTarefas},{quantidadeMaquinas},{rep},{tempoFinal:.2f},{iteracoes},{melhorMakespan},NA")
+                resultado.append(f"monotona,{quantidadeTarefas},{quantidadeMaquinas},{rep},{tempoFinal * 1000:.2f},{iteracoes},{melhorMakespan},NA")
     
     with open("resultados_blm.csv", "w") as excel:
         excel.write("heuristica,n,m,replicacao,tempo,iteracoes,valor,parametro\n")
@@ -80,4 +80,4 @@ def iniciarTestes():
 
 if __name__ == "__main__":
     iniciarTestes()
-    print("Simulação concluída. Resultados salvos em 'resultados_blm.txt'")
+    print("Simulação concluída. Resultados salvos em 'resultados_blm.csv'")
